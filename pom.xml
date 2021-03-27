@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.github.vitalikulsha</groupId>
-    <artifactId>telegrambot</artifactId>
+    <artifactId>VK_questBot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>VK_questBot</name>
     <description>My telegram bot</description>
