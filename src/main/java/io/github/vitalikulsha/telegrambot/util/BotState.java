@@ -1,4 +1,4 @@
-package io.github.vitalikulsha.telegrambot.botapi;
+package io.github.vitalikulsha.telegrambot.util;
 
 public enum BotState {
     INITIAL,

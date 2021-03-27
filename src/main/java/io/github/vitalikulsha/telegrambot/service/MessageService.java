@@ -3,7 +3,7 @@ package io.github.vitalikulsha.telegrambot.service;
 import io.github.vitalikulsha.telegrambot.util.BotCorrectAnswer;
 import io.github.vitalikulsha.telegrambot.util.BotMenuCommand;
 import io.github.vitalikulsha.telegrambot.util.BotReply;
-import io.github.vitalikulsha.telegrambot.botapi.BotState;
+import io.github.vitalikulsha.telegrambot.util.BotState;
 import io.github.vitalikulsha.telegrambot.model.UserDataCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

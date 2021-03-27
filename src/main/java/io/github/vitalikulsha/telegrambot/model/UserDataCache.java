@@ -1,6 +1,6 @@
 package io.github.vitalikulsha.telegrambot.model;
 
-import io.github.vitalikulsha.telegrambot.botapi.BotState;
+import io.github.vitalikulsha.telegrambot.util.BotState;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
