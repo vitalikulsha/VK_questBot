@@ -1,7 +1,7 @@
 package io.github.vitalikulsha.telegrambot.util;
 
 public enum BotCorrectAnswer {
-    ANSWER_ONE("Звезда"),
+    ANSWER_ONE("Солнце"),
     ANSWER_TWO("Зодиак"),
     ANSWER_THREE("Созвездие");
     String command;
