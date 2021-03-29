@@ -15,10 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class MessageService {
     private UserDataCache userDataCache;
     @Autowired
-    TelegramBot telegramBot;
-    @Autowired
     HandlerBotState handlerBotState;
-    //BotState botState;
 
     public MessageService(UserDataCache userDataCache) {
         this.userDataCache = userDataCache;
