@@ -1,16 +1,12 @@
 package io.github.vitalikulsha.telegrambot.service;
 
-import io.github.vitalikulsha.telegrambot.util.BotCorrectAnswer;
-import io.github.vitalikulsha.telegrambot.util.BotMenuCommand;
-import io.github.vitalikulsha.telegrambot.util.BotReply;
+import io.github.vitalikulsha.telegrambot.botapi.HandlerBotState;
 import io.github.vitalikulsha.telegrambot.util.BotState;
 import io.github.vitalikulsha.telegrambot.model.UserDataCache;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -20,6 +16,8 @@ public class MessageService {
     private UserDataCache userDataCache;
     @Autowired
     TelegramBot telegramBot;
+    @Autowired
+    HandlerBotState handlerBotState;
     //BotState botState;
 
     public MessageService(UserDataCache userDataCache) {
@@ -44,70 +42,25 @@ public class MessageService {
         String messageText = message.getText();
         int userId = message.getFrom().getId();
         long chatId = message.getChatId();
-        BotState botState;
-        String msg;
-        if (messageText.equals("/start")) {
-            botState = BotState.INITIAL;
-            telegramBot.sendPhoto(chatId, BotReply.HELLO.getCommand(), "src\\main\\resources\\img\\logo.png");
-            msg = BotReply.START.getCommand();
-        } else if (messageText.equalsIgnoreCase(BotMenuCommand.START_QUEST.getCommand())) {
-            botState = BotState.STEP_01;
-            telegramBot.sendPhoto(chatId, "", "src\\main\\resources\\img\\step01.png");
-            msg = BotReply.START_QUEST.getCommand();
-        } else if (messageText.equals(BotMenuCommand.HELP.getCommand())) {
-            botState = BotState.INITIAL;
-            msg = BotReply.HELP.getCommand();
-        } else if (messageText.equals(BotMenuCommand.HINT.getCommand())) {
-            botState = BotState.STEP_03;
-            msg = BotReply.HINT.getCommand();
-        } else {
-            botState = BotState.INITIAL;
-            msg = "Do no";
+        BotState botState = handlerBotState.initBotState(messageText);
+
+        if (userDataCache.getUsersCurrentBotState(userId) == BotState.INITIAL) {
+            botState = handlerBotState.handlerBotStateInitial(replyMessage, messageText, chatId);
         }
 
         if (userDataCache.getUsersCurrentBotState(userId) == BotState.STEP_01) {
-            if (messageText.equalsIgnoreCase(BotCorrectAnswer.ANSWER_ONE.getCommand())) {
-                botState = BotState.STEP_02;
-                telegramBot.sendPhoto(chatId, "", "src\\main\\resources\\img\\step02.png");
-                msg = "Right! This Sun! Next task";
-            } else if (messageText.equals(BotMenuCommand.HINT.getCommand())) {
-                botState = BotState.STEP_01;
-                msg = BotReply.HINT_STEP01.getCommand();
-            } else {
-                botState = BotState.STEP_01;
-                msg = "No right!";
-            }
+            botState = handlerBotState.handlerBotStateStep01(replyMessage, messageText, chatId);
         }
 
         if (userDataCache.getUsersCurrentBotState(userId) == BotState.STEP_02) {
-            if (messageText.equalsIgnoreCase(BotCorrectAnswer.ANSWER_TWO.getCommand())) {
-                botState = BotState.STEP_03;
-                telegramBot.sendPhoto(chatId, "", "src\\main\\resources\\img\\step03.png");
-                msg = "Right! This Zodiac! Next task";
-            } else if (messageText.equals(BotMenuCommand.HINT.getCommand())) {
-                botState = BotState.STEP_02;
-                msg = BotReply.HINT_STEP02.getCommand();
-            } else {
-                botState = BotState.STEP_02;
-                msg = "No right!";
-            }
+            botState = handlerBotState.handlerBotStateStep02(replyMessage, messageText, chatId);
         }
 
         if (userDataCache.getUsersCurrentBotState(userId) == BotState.STEP_03) {
-            if (messageText.equalsIgnoreCase(BotCorrectAnswer.ANSWER_THREE.getCommand())) {
-                botState = BotState.INITIAL;
-                telegramBot.sendPhoto(chatId, "", "src\\main\\resources\\img\\winner.gif");
-                msg = "Right! This Constellation! You win!";
-            } else if (messageText.equals(BotMenuCommand.HINT.getCommand())) {
-                botState = BotState.STEP_03;
-                msg = BotReply.HINT_STEP03.getCommand();
-            } else {
-                botState = BotState.STEP_03;
-                msg = "No right!";
-            }
+            botState = handlerBotState.handlerBotStateStep03(replyMessage, messageText, chatId);
         }
 
         userDataCache.setUsersCurrentBotState(userId, botState);
-        return replyMessage.setText(msg);
+        return replyMessage;
     }
 }

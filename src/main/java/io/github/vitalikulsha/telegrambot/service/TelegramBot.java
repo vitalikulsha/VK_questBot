@@ -35,13 +35,11 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         SendMessage sendMessage = messageService.onUpdateReceived(update);
-//        SendPhoto sendPhoto = messageService.onUpdateReceivedPhoto(update);
         sendMessage.enableMarkdown(true);
         sendMessage.setReplyMarkup(mainMenuService.getReplyKeyboardMarkup());
         sendMessage.setChatId(update.getMessage().getChatId());
         try {
             execute(sendMessage);
-//            execute(sendPhoto);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
